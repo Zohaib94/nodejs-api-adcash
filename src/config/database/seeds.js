@@ -9,4 +9,4 @@ const products = [
   },
 ];
 
-export { category, products }
+export { category, products };

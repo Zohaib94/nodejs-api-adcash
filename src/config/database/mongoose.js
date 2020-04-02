@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 
-import Product from '../../models/product/Product';
-import Category from '../../models/category/Category';
+import Product from '../../models/Product';
+import Category from '../../models/Category';
 
 const connectDb = () => {
-  return mongoose.connect('mongodb://127.0.0.1/adcash_database', { useNewUrlParser: true });
+  return mongoose.connect('mongodb://127.0.0.1/adcash_database', {
+    useNewUrlParser: true,
+  });
 };
 
 const seedData = async (category, products) => {
@@ -12,12 +14,12 @@ const seedData = async (category, products) => {
 
   const productObjects = products.map((p) => {
     p.category = categoryObject.id;
-    return(new Product(p));
+    return new Product(p);
   });
 
   await categoryObject.save();
-  await Product.insertMany(productObjects, function(error, docs) {});
-}
+  await Product.insertMany(productObjects, function (error, docs) {});
+};
 
 const models = { Product, Category };
 

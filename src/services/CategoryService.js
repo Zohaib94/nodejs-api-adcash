@@ -1,12 +1,12 @@
-import Category from '../../models/category/Category';
-import CategoryAssembler from './CategoryAssembler';
+import Category from '../models/Category';
+import CategorySerializer from '../serializers/CategorySerializer';
 
 class CategoryService {
   static async getAllCategories() {
     let categories = await Category.find();
 
-    return categories.map(category =>
-      CategoryAssembler.toResource(category)
+    return categories.map((category) =>
+      CategorySerializer.toResource(category),
     );
   }
 
@@ -14,30 +14,30 @@ class CategoryService {
     let category = await Category.findById(id);
 
     if (category) {
-      return CategoryAssembler.toResource(category);
+      return CategorySerializer.toResource(category);
     } else {
-      throw "Not Found";
+      throw 'Not Found';
     }
   }
 
   static async deleteCategory(id) {
     let category = await CategoryService.getCategory(id);
 
-    await Category.deleteOne({_id: category.id})
+    await Category.deleteOne({ _id: category.id });
   }
 
   static async updateCategory(id, params) {
     let category = await Category.findById(id);
 
     if (!category) {
-      throw "Not Found"
+      throw 'Not Found';
     }
 
     try {
       category.set({ title: params.title });
       let updatedCategory = await category.save();
 
-      return CategoryAssembler.toResource(updatedCategory);
+      return CategorySerializer.toResource(updatedCategory);
     } catch (error) {
       throw error;
     }
@@ -49,7 +49,7 @@ class CategoryService {
       category.set({ title: params.title });
       let newCategory = await category.save();
 
-      return CategoryAssembler.toResource(newCategory);
+      return CategorySerializer.toResource(newCategory);
     } catch (error) {
       throw error;
     }

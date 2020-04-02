@@ -1,5 +1,5 @@
-class CategoryDTO {
-  constructor(title='', id='') {
+class CategoryResponse {
+  constructor(title = '', id = '') {
     this.title = title;
     this.id = id;
   }
@@ -17,4 +17,4 @@ class CategoryDTO {
   }
 }
 
-export default CategoryDTO;
+export default CategoryResponse;

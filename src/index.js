@@ -2,7 +2,10 @@ import express from 'express';
 import cors from 'cors';
 
 import routes from './config/routes';
-import models, { connectDb, seedData } from './config/database/mongoose';
+import models, {
+  connectDb,
+  seedData,
+} from './config/database/mongoose';
 import { category, products } from './config/database/seeds';
 
 const BASE_API_URL = '/api/v1';
