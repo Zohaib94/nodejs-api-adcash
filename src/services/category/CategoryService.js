@@ -5,27 +5,25 @@ class CategoryService {
   static async getAllCategories() {
     let categories = await Category.find();
 
-    try {
-      return categories.map(category =>
-        CategoryAssembler.toResource(category)
-      );
-    } catch (err) {
-      throw err;
-    }
+    return categories.map(category =>
+      CategoryAssembler.toResource(category)
+    );
   }
 
   static async getCategory(id) {
     let category = await Category.findById(id);
 
-    try {
-      if (category) {
-        return CategoryAssembler.toResource(category);
-      } else {
-        throw "Not Found";
-      }
-    } catch (err) {
-      throw err;
+    if (category) {
+      return CategoryAssembler.toResource(category);
+    } else {
+      throw "Not Found";
     }
+  }
+
+  static async deleteCategory(id) {
+    let category = await CategoryService.getCategory(id);
+
+    await Category.deleteOne({_id: category.id})
   }
 }
 

@@ -14,11 +14,21 @@ CategoriesController.get('/', async (request, response) => {
 
 CategoriesController.get('/:categoryId', async (request, response) => {
   try {
-    let categories = await CategoryService.getCategory(request.params.categoryId);
-    response.send(categories);
+    let category = await CategoryService.getCategory(request.params.categoryId);
+    response.send(category);
   } catch (err) {
     response.status(500).send(err);
   }
 });
+
+CategoriesController.delete('/:categoryId', async (request, response) => {
+  try {
+    await CategoryService.deleteCategory(request.params.categoryId);
+    response.send("Deleted Succesfully");
+  } catch (err) {
+    response.status(500).send(err);
+  }
+});
+
 
 export default CategoriesController;
