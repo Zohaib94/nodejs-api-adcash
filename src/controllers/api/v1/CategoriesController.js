@@ -1,9 +1,15 @@
-import { Router } from 'express';
+import { Router, response } from 'express';
+import CategoryService from '../../../services/category/CategoryService';
 
 const CategoriesController = Router();
 
-CategoriesController.get('/', (request, response) => {
-  return response.send([]);
+CategoriesController.get('/', async (request, response) => {
+  try {
+    let categories = await CategoryService.getAllCategories();
+    response.send(categories);
+  } catch (err) {
+    response.status(500).send(err);
+  }
 });
 
 export default CategoriesController;
