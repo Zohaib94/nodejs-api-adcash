@@ -15,6 +15,10 @@ class CategoryResponse {
   getId() {
     return this.id;
   }
+
+  setProducts(products) {
+    this.products = products;
+  }
 }
 
 export default CategoryResponse;

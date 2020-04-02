@@ -11,10 +11,10 @@ class CategoryService {
   }
 
   static async getCategory(id) {
-    let category = await Category.findById(id);
+    let category = await Category.findById(id).populate('products');
 
     if (category) {
-      return CategorySerializer.toResource(category);
+      return CategorySerializer.toResourceWithProducts(category);
     } else {
       throw 'Not Found';
     }

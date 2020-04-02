@@ -11,14 +11,18 @@ const connectDb = () => {
 
 const seedData = async (category, products) => {
   const categoryObject = new Category(category);
+  let cat = await categoryObject.save();
 
-  const productObjects = products.map((p) => {
-    p.category = categoryObject.id;
-    return new Product(p);
+  let productObjects = products.map((p) => {
+    p._category = cat._id;
+    return (new Product(p));
   });
 
-  await categoryObject.save();
-  await Product.insertMany(productObjects, function (error, docs) {});
+  let productObject = productObjects[0];
+  productObject = await productObject.save();
+
+  cat.products.push(productObject);
+  await cat.save();
 };
 
 const models = { Product, Category };
