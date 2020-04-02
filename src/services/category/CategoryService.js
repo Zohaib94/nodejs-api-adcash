@@ -25,6 +25,35 @@ class CategoryService {
 
     await Category.deleteOne({_id: category.id})
   }
+
+  static async updateCategory(id, params) {
+    let category = await Category.findById(id);
+
+    if (!category) {
+      throw "Not Found"
+    }
+
+    try {
+      category.set({ title: params.title });
+      let updatedCategory = await category.save();
+
+      return CategoryAssembler.toResource(updatedCategory);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async createCategory(params) {
+    try {
+      let category = new Category();
+      category.set({ title: params.title });
+      let newCategory = await category.save();
+
+      return CategoryAssembler.toResource(newCategory);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default CategoryService;

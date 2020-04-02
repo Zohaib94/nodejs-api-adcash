@@ -30,5 +30,23 @@ CategoriesController.delete('/:categoryId', async (request, response) => {
   }
 });
 
+CategoriesController.patch('/:categoryId', async (request, response) => {
+  try {
+    let updatedCategory = await CategoryService.updateCategory(request.params.categoryId, request.body);
+    response.send(updatedCategory);
+  } catch (err) {
+    response.status(500).send(err);
+  }
+});
+
+CategoriesController.post('/', async (request, response) => {
+  try {
+    let updatedCategory = await CategoryService.createCategory(request.body);
+    response.send(updatedCategory);
+  } catch (err) {
+    response.status(500).send(err);
+  }
+});
+
 
 export default CategoriesController;
