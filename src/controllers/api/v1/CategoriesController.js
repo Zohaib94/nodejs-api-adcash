@@ -12,4 +12,13 @@ CategoriesController.get('/', async (request, response) => {
   }
 });
 
+CategoriesController.get('/:categoryId', async (request, response) => {
+  try {
+    let categories = await CategoryService.getCategory(request.params.categoryId);
+    response.send(categories);
+  } catch (err) {
+    response.status(500).send(err);
+  }
+});
+
 export default CategoriesController;

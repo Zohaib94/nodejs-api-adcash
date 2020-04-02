@@ -1,6 +1,7 @@
 class CategoryDTO {
-  constructor(title='') {
+  constructor(title='', id='') {
     this.title = title;
+    this.id = id;
   }
 
   setTitle(title) {
@@ -9,6 +10,10 @@ class CategoryDTO {
 
   getTitle() {
     return this.title;
+  }
+
+  getId() {
+    return this.id;
   }
 }
 

@@ -13,6 +13,20 @@ class CategoryService {
       throw err;
     }
   }
+
+  static async getCategory(id) {
+    let category = await Category.findById(id);
+
+    try {
+      if (category) {
+        return CategoryAssembler.toResource(category);
+      } else {
+        throw "Not Found";
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 export default CategoryService;
