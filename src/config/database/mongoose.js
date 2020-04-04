@@ -4,7 +4,7 @@ import Product from '../../models/Product';
 import Category from '../../models/Category';
 
 const connectDb = () => {
-  return mongoose.connect('mongodb://127.0.0.1/adcash_database', {
+  return mongoose.connect(process.env.MONGODB_URL || 'mongodb://127.0.0.1/adcash_database', {
     useNewUrlParser: true,
   });
 };

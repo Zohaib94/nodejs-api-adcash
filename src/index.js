@@ -16,7 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(CATEGORY_API_URL, routes.CategoriesController);
 
 connectDb().then(async () => {
-  app.listen(3000, () =>
+  const port = process.env.PORT || 3000;
+
+  app.listen(port, () =>
     console.log('Adcash NodeJS API listening on port 3000!'),
   );
 });
