@@ -1,15 +1,18 @@
 import { Router, response } from 'express';
 import CategoryService from '../../../services/CategoryService';
 import ProductsController from './ProductsController';
+import SuccessResponse from '../../../responses/SuccessReponse';
 
 const CategoriesController = Router();
 
 CategoriesController.get('/', async (request, response) => {
   try {
     let categories = await CategoryService.getAllCategories();
-    response.send(categories);
+    let responseObject = new SuccessResponse(categories);
+
+    response.json(responseObject);
   } catch (err) {
-    response.status(500).send(err);
+    response.status(err.code).json(err.getResource());
   }
 });
 
@@ -20,9 +23,11 @@ CategoriesController.get(
       let category = await CategoryService.getCategory(
         request.params.categoryId,
       );
-      response.send(category);
+      let responseObject = new SuccessResponse(category);
+
+      response.json(responseObject);
     } catch (err) {
-      response.status(500).send(err);
+      response.status(err.code).json(err.getResource());
     }
   },
 );
@@ -32,9 +37,13 @@ CategoriesController.delete(
   async (request, response) => {
     try {
       await CategoryService.deleteCategory(request.params.categoryId);
-      response.send('Deleted Succesfully');
+      let responseObject = new SuccessResponse({
+        message: 'Category has been deleted successfully',
+      });
+
+      response.json(responseObject);
     } catch (err) {
-      response.status(500).send(err);
+      response.status(err.code).json(err.getResource());
     }
   },
 );
@@ -47,21 +56,25 @@ CategoriesController.patch(
         request.params.categoryId,
         request.body,
       );
-      response.send(updatedCategory);
+      let responseObject = new SuccessResponse(updatedCategory);
+
+      response.json(responseObject);
     } catch (err) {
-      response.status(500).send(err);
+      response.status(err.code).json(err.getResource());
     }
   },
 );
 
 CategoriesController.post('/', async (request, response) => {
   try {
-    let updatedCategory = await CategoryService.createCategory(
+    let newCategory = await CategoryService.createCategory(
       request.body,
     );
-    response.send(updatedCategory);
+    let responseObject = new SuccessResponse(newCategory);
+
+    response.json(responseObject);
   } catch (err) {
-    response.status(500).send(err);
+    response.status(err.code).json(err.getResource());
   }
 });
 

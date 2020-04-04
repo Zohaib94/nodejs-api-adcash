@@ -1,5 +1,6 @@
 import Category from '../models/Category';
 import CategorySerializer from '../serializers/CategorySerializer';
+import ErrorResponse from '../responses/ErrorResponse';
 
 class CategoryService {
   static async getAllCategories() {
@@ -12,12 +13,9 @@ class CategoryService {
 
   static async getCategory(id) {
     let category = await Category.findById(id).populate('products');
+    if (!category) throw new ErrorResponse('Category Not Found', 404);
 
-    if (category) {
-      return CategorySerializer.toResourceWithProducts(category);
-    } else {
-      throw 'Not Found';
-    }
+    return CategorySerializer.toResourceWithProducts(category);
   }
 
   static async deleteCategory(id) {
@@ -28,10 +26,7 @@ class CategoryService {
 
   static async updateCategory(id, params) {
     let category = await Category.findById(id);
-
-    if (!category) {
-      throw 'Not Found';
-    }
+    if (!category) throw new ErrorResponse('Category Not Found', 404);
 
     try {
       category.set({ title: params.title });
@@ -39,7 +34,7 @@ class CategoryService {
 
       return CategorySerializer.toResource(updatedCategory);
     } catch (error) {
-      throw error;
+      throw new ErrorResponse(error.message, 422);
     }
   }
 
@@ -51,7 +46,7 @@ class CategoryService {
 
       return CategorySerializer.toResource(newCategory);
     } catch (error) {
-      throw error;
+      throw new ErrorResponse(error.message, 422);
     }
   }
 }
