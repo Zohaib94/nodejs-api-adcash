@@ -1,5 +1,6 @@
 import { Router, response } from 'express';
 import CategoryService from '../../../services/CategoryService';
+import ProductsController from './ProductsController';
 
 const CategoriesController = Router();
 
@@ -63,5 +64,7 @@ CategoriesController.post('/', async (request, response) => {
     response.status(500).send(err);
   }
 });
+
+CategoriesController.use('/:categoryId/products', ProductsController);
 
 export default CategoriesController;

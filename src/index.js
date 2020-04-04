@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import morgan from 'morgan';
 
 import routes from './config/routes';
 import models, {
@@ -9,6 +10,7 @@ import models, {
 import { category, products } from './config/database/seeds';
 
 const BASE_API_URL = '/api/v1';
+const CATEGORY_API_URL = `${BASE_API_URL}/categories`;
 const app = express();
 
 app.use(cors());
@@ -16,10 +18,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(`${BASE_API_URL}/categories`, routes.CategoriesController);
-app.use(`${BASE_API_URL}/products`, routes.ProductsController);
+app.use(CATEGORY_API_URL, routes.CategoriesController);
 
-const eraseDatabaseOnSync = true;
+
+const eraseDatabaseOnSync = false;
 
 connectDb().then(async () => {
   if (eraseDatabaseOnSync) {
