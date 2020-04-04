@@ -20,7 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(CATEGORY_API_URL, routes.CategoriesController);
 
-
 const eraseDatabaseOnSync = false;
 
 connectDb().then(async () => {

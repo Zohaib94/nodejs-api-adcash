@@ -15,7 +15,7 @@ const seedData = async (category, products) => {
 
   let productObjects = products.map((p) => {
     p._category = cat._id;
-    return (new Product(p));
+    return new Product(p);
   });
 
   let productObject = productObjects[0];

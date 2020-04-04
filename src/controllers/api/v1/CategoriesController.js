@@ -2,6 +2,8 @@ import { Router, response } from 'express';
 import CategoryService from '../../../services/CategoryService';
 import ProductsController from './ProductsController';
 import SuccessResponse from '../../../responses/SuccessReponse';
+import { Types } from 'mongoose';
+import ErrorResponse from '../../../responses/ErrorResponse';
 
 const CategoriesController = Router();
 
@@ -20,6 +22,9 @@ CategoriesController.get(
   '/:categoryId',
   async (request, response) => {
     try {
+      if (!Types.ObjectId.isValid(request.params.categoryId))
+        throw new ErrorResponse('Invalid Category ID', 422);
+
       let category = await CategoryService.getCategory(
         request.params.categoryId,
       );
@@ -36,6 +41,9 @@ CategoriesController.delete(
   '/:categoryId',
   async (request, response) => {
     try {
+      if (!Types.ObjectId.isValid(request.params.categoryId))
+        throw new ErrorResponse('Invalid Category ID', 422);
+
       await CategoryService.deleteCategory(request.params.categoryId);
       let responseObject = new SuccessResponse({
         message: 'Category has been deleted successfully',
@@ -52,6 +60,9 @@ CategoriesController.patch(
   '/:categoryId',
   async (request, response) => {
     try {
+      if (!Types.ObjectId.isValid(request.params.categoryId))
+        throw new ErrorResponse('Invalid Category ID', 422);
+
       let updatedCategory = await CategoryService.updateCategory(
         request.params.categoryId,
         request.body,

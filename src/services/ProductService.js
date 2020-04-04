@@ -1,59 +1,79 @@
 import ProductSerializer from '../serializers/ProductSerializer';
 import Product from '../models/Product';
 import Category from '../models/Category';
-import CategoryService from './CategoryService';
+import ErrorResponse from '../responses/ErrorResponse';
 
 class ProductService {
   static async deleteCategoryProduct(categoryId, productId) {
     let category = await Category.findById(categoryId);
     let product = await Product.findById(productId);
 
-    if(!category) throw "Category Not Found"
-    if(!product) throw "Product Not Found"
-    if(!(category.products.includes(product._id))) throw "Product is not of this category"
+    if (!category) throw new ErrorResponse('Category not Found', 404);
+    if (!product) throw new ErrorResponse('Product not Found', 404);
+    if (!category.products.includes(product._id)) {
+      throw new ErrorResponse(
+        'Product does not belong to this category',
+        422,
+      );
+    }
 
-    await Product.deleteOne({ _id: product.id });
-
-    category.products.pull(product._id)
-    await category.save();
-
-    return 200;
+    try {
+      await Product.deleteOne({ _id: product.id });
+      category.products.pull(product._id);
+      await category.save();
+    } catch (error) {
+      throw new ErrorResponse(error.message, 422);
+    }
   }
 
   static async updateCategoryProduct(categoryId, productId, params) {
     let category = await Category.findById(categoryId);
     let product = await Product.findById(productId);
 
-    if(!category) throw "Category Not Found"
-    if(!product) throw "Product Not Found"
-    if(!(category.products.includes(product._id))) throw "Product is not of this category"
+    if (!category) throw new ErrorResponse('Category not Found', 404);
+    if (!product) throw new ErrorResponse('Product not Found', 404);
+    if (!category.products.includes(product._id)) {
+      throw new ErrorResponse(
+        'Product does not belong to this category',
+        422,
+      );
+    }
 
     try {
-      product.set({ name: params.name, description: params.description });
+      product.set({
+        name: params.name,
+        description: params.description,
+      });
       let updatedProduct = await product.save();
 
       return ProductSerializer.toResource(updatedProduct);
     } catch (error) {
-      throw error;
+      throw new ErrorResponse(error.message, 422);
     }
   }
 
   static async createCategoryProduct(categoryId, params) {
     let category = await Category.findById(categoryId);
+    if (!category) throw new ErrorResponse('Category not Found', 404);
 
     let productParams = {
       name: params.name,
       description: params.description,
-      _category: category._id
-    }
+      _category: category._id,
+    };
 
     let product = new Product(productParams);
-    product = await product.save()
 
-    category.products.push(product);
-    await category.save();
+    try {
+      product = await product.save();
 
-    return (ProductSerializer.toResource(product));
+      category.products.push(product);
+      await category.save();
+
+      return ProductSerializer.toResource(product);
+    } catch (error) {
+      throw new ErrorResponse(error.message, 422);
+    }
   }
 }
 

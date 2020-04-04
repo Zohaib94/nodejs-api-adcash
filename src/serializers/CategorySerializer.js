@@ -12,12 +12,16 @@ class CategorySerializer {
 
   static toResourceWithProducts(categoryObject) {
     let categoryProducts = categoryObject.products.map((product) => {
-      return new ProductResponse(product.name, product.description, product._id);
-    })
+      return new ProductResponse(
+        product.name,
+        product.description,
+        product._id,
+      );
+    });
 
     let categoryResource = new CategoryResponse(
       categoryObject.title,
-      categoryObject.id
+      categoryObject.id,
     );
 
     categoryResource.setProducts(categoryProducts);
