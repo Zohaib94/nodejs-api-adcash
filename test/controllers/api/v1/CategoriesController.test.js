@@ -4,6 +4,8 @@ import app from '../../../../src/config/server/index';
 import CategoryService from '../../../../src/services/CategoryService';
 import ProductService from '../../../../src/services/ProductService';
 
+const BASE_CATEGORY_URL = '/api/v1/categories';
+
 describe('CategoriesController', () => {
   beforeAll(async () => {
     await mongoose.connect(
@@ -30,7 +32,7 @@ describe('CategoriesController', () => {
     };
 
     const res = await request(app)
-      .post('/api/v1/categories')
+      .post(BASE_CATEGORY_URL)
       .send(inputObject);
 
     expect(res.statusCode).toEqual(200);
@@ -39,7 +41,7 @@ describe('CategoriesController', () => {
   });
 
   it('GET /categories (return list)', async (done) => {
-    const res = await request(app).get('/api/v1/categories');
+    const res = await request(app).get(BASE_CATEGORY_URL);
     const expectedResult = 'Test';
 
     expect(res.statusCode).toEqual(200);
@@ -53,7 +55,7 @@ describe('CategoriesController', () => {
       'Category validation failed: title: Path `title` is required.';
 
     const res = await request(app)
-      .post('/api/v1/categories')
+      .post(BASE_CATEGORY_URL)
       .send(inputObject);
 
     expect(res.statusCode).toEqual(422);
@@ -63,7 +65,7 @@ describe('CategoriesController', () => {
 
   it('GET /categories/:categoryId (Invalid ID)', async (done) => {
     const res = await request(app).get(
-      '/api/v1/categories/5e8888fa04c0410048cc853',
+      `${BASE_CATEGORY_URL}/5e8888fa04c0410048cc853`,
     );
     const expectedResult = 'Invalid Category ID';
 
@@ -74,7 +76,7 @@ describe('CategoriesController', () => {
 
   it('GET /categories/:categoryId (Category Not Found)', async (done) => {
     const res = await request(app).get(
-      '/api/v1/categories/5e8888fa04c0410048cc853e',
+      `${BASE_CATEGORY_URL}/5e8888fa04c0410048cc853e`,
     );
     const expectedResult = 'Category Not Found';
 
@@ -93,7 +95,7 @@ describe('CategoriesController', () => {
     );
 
     const res = await request(app).get(
-      `/api/v1/categories/${category.id}`,
+      `${BASE_CATEGORY_URL}/${category.id}`,
     );
     const expectedResult = {
       id: category.id,
@@ -122,7 +124,7 @@ describe('CategoriesController', () => {
     };
 
     const res = await request(app)
-      .patch(`/api/v1/categories/${category.id}`)
+      .patch(`${BASE_CATEGORY_URL}/${category.id}`)
       .send(inputObject);
 
     expect(res.statusCode).toEqual(200);
@@ -138,7 +140,7 @@ describe('CategoriesController', () => {
     const oldLength = (await CategoryService.getAllCategories())
       .length;
     const res = await request(app).delete(
-      `/api/v1/categories/${category.id}`,
+      `${BASE_CATEGORY_URL}/${category.id}`,
     );
     const newLength = (await CategoryService.getAllCategories())
       .length;
