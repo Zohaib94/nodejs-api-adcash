@@ -112,13 +112,23 @@ describe('CategoriesController', () => {
     done();
   });
 
-  // it('PATCH /categories/:categoryId (Successful Case, we have tested possible failures already)', async () => {
-  //   const res = await request(app).get('/api/v1/categories');
-  //   const expectedResult = [];
+  it('PATCH /categories/:categoryId (Successful Case, we have tested possible failures already)', async (done) => {
+    const category = await CategoryService.createCategory({
+      title: 'Test',
+    });
 
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body.resource).toEqual(expectedResult);
-  // });
+    const inputObject = {
+      title: 'Updated Test',
+    };
+
+    const res = await request(app)
+      .patch(`/api/v1/categories/${category.id}`)
+      .send(inputObject);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.resource.title).toEqual(inputObject.title);
+    done();
+  });
 
   // it('DELETE /categories/:categoryId (Successful Case, we have tested possible failures already)', async () => {
   //   const res = await request(app).get('/api/v1/categories');
