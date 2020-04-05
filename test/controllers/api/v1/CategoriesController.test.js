@@ -130,11 +130,21 @@ describe('CategoriesController', () => {
     done();
   });
 
-  // it('DELETE /categories/:categoryId (Successful Case, we have tested possible failures already)', async () => {
-  //   const res = await request(app).get('/api/v1/categories');
-  //   const expectedResult = [];
+  it('DELETE /categories/:categoryId (Successful Case, we have tested possible failures already)', async (done) => {
+    const category = await CategoryService.createCategory({
+      title: 'Test',
+    });
 
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body.resource).toEqual(expectedResult);
-  // });
+    const oldLength = (await CategoryService.getAllCategories())
+      .length;
+    const res = await request(app).delete(
+      `/api/v1/categories/${category.id}`,
+    );
+    const newLength = (await CategoryService.getAllCategories())
+      .length;
+
+    expect(res.statusCode).toEqual(200);
+    expect(oldLength > newLength).toEqual(true);
+    done();
+  });
 });
