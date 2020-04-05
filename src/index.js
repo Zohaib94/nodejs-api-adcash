@@ -1,19 +1,5 @@
-import express from 'express';
-import cors from 'cors';
-
-import routes from './config/routes';
 import { connectDb } from './config/database/mongoose';
-
-const BASE_API_URL = '/api/v1';
-const CATEGORY_API_URL = `${BASE_API_URL}/categories`;
-const app = express();
-
-app.use(cors());
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(CATEGORY_API_URL, routes.CategoriesController);
+import app from './config/server/index';
 
 connectDb().then(async () => {
   const port = process.env.PORT || 3000;
