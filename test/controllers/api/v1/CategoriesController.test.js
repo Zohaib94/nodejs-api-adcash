@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 import app from '../../../../src/config/server/index';
+import CategoryService from '../../../../src/services/CategoryService';
+import ProductService from '../../../../src/services/ProductService';
 
 describe('CategoriesController', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await mongoose.connect(
       global.__MONGO_URI__,
       { useNewUrlParser: true, useCreateIndex: true },
@@ -59,29 +61,56 @@ describe('CategoriesController', () => {
     done();
   });
 
-  // it('GET /categories/:categoryId (Invalid ID)', async () => {
-  //   const res = await request(app).get('/api/v1/categories');
-  //   const expectedResult = [];
+  it('GET /categories/:categoryId (Invalid ID)', async (done) => {
+    const res = await request(app).get(
+      '/api/v1/categories/5e8888fa04c0410048cc853',
+    );
+    const expectedResult = 'Invalid Category ID';
 
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body.resource).toEqual(expectedResult);
-  // });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body.message).toEqual(expectedResult);
+    done();
+  });
 
-  // it('GET /categories/:categoryId (Category does not exist)', async () => {
-  //   const res = await request(app).get('/api/v1/categories');
-  //   const expectedResult = [];
+  it('GET /categories/:categoryId (Category Not Found)', async (done) => {
+    const res = await request(app).get(
+      '/api/v1/categories/5e8888fa04c0410048cc853e',
+    );
+    const expectedResult = 'Category Not Found';
 
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body.resource).toEqual(expectedResult);
-  // });
+    expect(res.statusCode).toEqual(404);
+    expect(res.body.message).toEqual(expectedResult);
+    done();
+  });
 
-  // it('GET /categories/:categoryId (Successful Case)', async () => {
-  //   const res = await request(app).get('/api/v1/categories');
-  //   const expectedResult = [];
+  it('GET /categories/:categoryId (Successful Case)', async (done) => {
+    const category = await CategoryService.createCategory({
+      title: 'Test',
+    });
+    const product = await ProductService.createCategoryProduct(
+      category.id,
+      { name: 'Test Product', description: 'Test Description' },
+    );
 
-  //   expect(res.statusCode).toEqual(200);
-  //   expect(res.body.resource).toEqual(expectedResult);
-  // });
+    const res = await request(app).get(
+      `/api/v1/categories/${category.id}`,
+    );
+    const expectedResult = {
+      id: category.id,
+      title: category.title,
+      products: [
+        {
+          id: product.id,
+          name: product.name,
+          description: product.description,
+        },
+      ],
+    };
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.resource).toEqual(expectedResult);
+    done();
+  });
 
   // it('PATCH /categories/:categoryId (Successful Case, we have tested possible failures already)', async () => {
   //   const res = await request(app).get('/api/v1/categories');

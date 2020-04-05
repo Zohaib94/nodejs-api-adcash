@@ -5,7 +5,7 @@ class ProductSerializer {
     let productResource = new ProductResponse(
       productObject.name,
       productObject.description,
-      productObject._id,
+      productObject.id,
     );
     return productResource;
   }
