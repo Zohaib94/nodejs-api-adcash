@@ -161,4 +161,31 @@ describe('ProductsController', () => {
     );
     done();
   });
+
+  it('DELETE /categories/:categoryId/products/:productId (Success)', async (done) => {
+    const category = await CategoryService.createCategory({
+      title: 'Test',
+    });
+
+    const product = await ProductService.createCategoryProduct(
+      category.id,
+      { name: 'Test Product', description: 'Test Description' },
+    );
+
+    const oldProductLength = (
+      await CategoryService.getCategory(category.id)
+    ).products.length;
+
+    const res = await request(app).delete(
+      `${BASE_CATEGORY_URL}/${category.id}/products/${product.id}`,
+    );
+
+    const newProductLength = (
+      await CategoryService.getCategory(category.id)
+    ).products.length;
+
+    expect(res.statusCode).toEqual(200);
+    expect(oldProductLength > newProductLength).toEqual(true);
+    done();
+  });
 });
