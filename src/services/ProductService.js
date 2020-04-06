@@ -8,8 +8,8 @@ class ProductService {
     let category = await Category.findById(categoryId);
     let product = await Product.findById(productId);
 
-    if (!category) throw new ErrorResponse('Category not Found', 404);
-    if (!product) throw new ErrorResponse('Product not Found', 404);
+    if (!category) throw new ErrorResponse('Category Not Found', 404);
+    if (!product) throw new ErrorResponse('Product Not Found', 404);
     if (!category.products.includes(product._id)) {
       throw new ErrorResponse(
         'Product does not belong to this category',
@@ -30,8 +30,8 @@ class ProductService {
     let category = await Category.findById(categoryId);
     let product = await Product.findById(productId);
 
-    if (!category) throw new ErrorResponse('Category not Found', 404);
-    if (!product) throw new ErrorResponse('Product not Found', 404);
+    if (!category) throw new ErrorResponse('Category Not Found', 404);
+    if (!product) throw new ErrorResponse('Product Not Found', 404);
     if (!category.products.includes(product._id)) {
       throw new ErrorResponse(
         'Product does not belong to this category',
@@ -54,7 +54,7 @@ class ProductService {
 
   static async createCategoryProduct(categoryId, params) {
     let category = await Category.findById(categoryId);
-    if (!category) throw new ErrorResponse('Category not Found', 404);
+    if (!category) throw new ErrorResponse('Category Not Found', 404);
 
     let productParams = {
       name: params.name,
