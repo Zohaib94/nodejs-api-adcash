@@ -100,4 +100,65 @@ describe('ProductsController', () => {
     );
     done();
   });
+
+  it('PATCH /categories/:categoryId/products/:productId (Product Does Not Belong to Category)', async (done) => {
+    const category = await CategoryService.createCategory({
+      title: 'Test',
+    });
+
+    const category2 = await CategoryService.createCategory({
+      title: 'Test 2',
+    });
+
+    const product = await ProductService.createCategoryProduct(
+      category.id,
+      { name: 'Test Product', description: 'Test Description' },
+    );
+
+    const inputObject = {
+      name: 'Product Name',
+      description: 'Product Description',
+    };
+
+    const res = await request(app)
+      .patch(
+        `${BASE_CATEGORY_URL}/${category2.id}/products/${product.id}`,
+      )
+      .send(inputObject);
+
+    expect(res.statusCode).toEqual(422);
+    expect(res.body.message).toEqual(
+      'Product does not belong to this category',
+    );
+    done();
+  });
+
+  it('PATCH /categories/:categoryId/products/:productId (Success)', async (done) => {
+    const category = await CategoryService.createCategory({
+      title: 'Test',
+    });
+
+    const product = await ProductService.createCategoryProduct(
+      category.id,
+      { name: 'Test Product', description: 'Test Description' },
+    );
+
+    const inputObject = {
+      name: 'Product Name',
+      description: 'Product Description',
+    };
+
+    const res = await request(app)
+      .patch(
+        `${BASE_CATEGORY_URL}/${category.id}/products/${product.id}`,
+      )
+      .send(inputObject);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.resource.name).toEqual(inputObject.name);
+    expect(res.body.resource.description).toEqual(
+      inputObject.description,
+    );
+    done();
+  });
 });
