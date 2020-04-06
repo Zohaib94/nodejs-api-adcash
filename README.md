@@ -21,10 +21,15 @@ API is deployed on https://nodejs-api-adcash.herokuapp.com/api/v1
 
 - `DELETE /categories/:categoryId/products/:productId` (Delete a product in that category)
 
+**Testing:**
+- `npm test` to run tests.
+
 **Deployment Steps with Heroku:**
-- Create App on Heroku
+Note: The app is already deployed on https://nodejs-api-adcash.herokuapp.com/api/v1, However, to deploy this application, take following steps:
+- Make sure Heroku CLI is installed in your local environment.
+- `git clone https://github.com/Zohaib94/nodejs-api-adcash.git`
+- `heroku create app-name` (or Create App on Heroku Web Console in your account and add heroku remote through Heroku CLI)
 - Setup MongoDB on MongoDB Cloud, Create a new Cluster and setup Connection to get connection string.
-- Add Heroku Remote on local environment
+- Setup `MONGOLAB_URL` environment variable on Heroku Web Console for your newly created app.
 - `git push heroku master`
-- Setup `MONGOLAB_URL` environment variable on heroku.
-- (Not recommended: For quicker deployment to face less issues regarding installation of dev dependencies for now, I have set `heroku config:set NPM_CONFIG_PRODUCTION=false`)
+- `heroku config:set NPM_CONFIG_PRODUCTION=false`
